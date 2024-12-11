@@ -6,12 +6,12 @@ local CoreGui = game:GetService("CoreGui")
 local plr = Players.LocalPlayer
 local ESPenabled = false
 
--- Helper function to get the player's root part
+
 local function getRoot(character)
     return character:FindFirstChild("HumanoidRootPart") or character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso")
 end
 
--- Helper function to remove ESP
+
 local function removeESP()
     for _, c in pairs(CoreGui:GetChildren()) do
         if string.sub(c.Name, -4) == '_ESP' then
@@ -20,26 +20,26 @@ local function removeESP()
     end
 end
 
--- ESP Logic
+
 local function ESP(targetPlayer)
     task.spawn(function()
-        -- Remove existing ESP for the player
+        
         for _, v in pairs(CoreGui:GetChildren()) do
             if v.Name == targetPlayer.Name .. '_ESP' then
                 v:Destroy()
             end
         end
 
-        -- Wait for the player's character to load
+        
         repeat task.wait(1) until targetPlayer.Character and getRoot(targetPlayer.Character) and targetPlayer.Character:FindFirstChildOfClass("Humanoid")
         if not targetPlayer.Character then return end
 
-        -- Create ESP holder
+        
         local ESPholder = Instance.new("Folder")
         ESPholder.Name = targetPlayer.Name .. '_ESP'
         ESPholder.Parent = CoreGui
 
-        -- Highlight
+        
         local highlight = Instance.new("Highlight")
         highlight.Name = targetPlayer.Name
         highlight.Parent = ESPholder
@@ -47,7 +47,7 @@ local function ESP(targetPlayer)
         highlight.FillTransparency = 0.45
         highlight.FillColor = Color3.fromRGB(0, 255, 0)
 
-        -- Billboard
+        
         if targetPlayer.Character:FindFirstChild("Head") then
             local BillboardGui = Instance.new("BillboardGui")
             local TextLabel = Instance.new("TextLabel")
@@ -64,13 +64,13 @@ local function ESP(targetPlayer)
             TextLabel.Size = UDim2.new(0, 100, 0, 100)
             TextLabel.Font = Enum.Font.SourceSansSemibold
             TextLabel.TextSize = 17
-            TextLabel.TextColor3 = Color3.new(12 / 255, 4 / 255, 20 / 255) -- Normalize colors
+            TextLabel.TextColor3 = Color3.new(12 / 255, 4 / 255, 20 / 255) 
             TextLabel.TextStrokeTransparency = 0.3
             TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
             TextLabel.Text = '@' .. targetPlayer.Name .. ' | ' .. targetPlayer.DisplayName
             TextLabel.ZIndex = 10
 
-            -- ESP Loop
+            
             local function espLoop()
                 if CoreGui:FindFirstChild(targetPlayer.Name .. '_ESP') then
                     if targetPlayer.Character and getRoot(targetPlayer.Character) and targetPlayer.Character:FindFirstChildOfClass("Humanoid")
@@ -89,14 +89,14 @@ local function ESP(targetPlayer)
     end)
 end
 
--- GUI setup
+
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "AimbotUI"
 screenGui.Parent = playerGui
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 300, 0, 300) -- Increased height to accommodate new elements
+mainFrame.Size = UDim2.new(0, 300, 0, 300) 
 mainFrame.Position = UDim2.new(0.5, -150, 0.5, -150)
 mainFrame.BackgroundColor3 = Color3.fromRGB(177, 252, 3)
 mainFrame.BorderSizePixel = 1
@@ -145,7 +145,7 @@ local function createButton(name, posY, toggleFunc)
     end)
 end
 
--- ESP Toggle
+
 createButton("ESP", 50, function(button)
     ESPenabled = not ESPenabled
     if ESPenabled then
@@ -166,7 +166,7 @@ createButton("ESP", 50, function(button)
     end
 end)
 
--- TextBox for Username Input
+
 local usernameTextBox = Instance.new("TextBox")
 usernameTextBox.Name = "UsernameTextBox"
 usernameTextBox.Size = UDim2.new(1, -20, 0, 30)
@@ -180,7 +180,7 @@ usernameTextBox.Text = ""
 usernameTextBox.ClearTextOnFocus = false
 usernameTextBox.Parent = mainFrame
 
--- Teleport Button
+
 createButton("Teleport", 140, function(button)
     local targetUsername = usernameTextBox.Text
     local targetPlayer = Players:FindFirstChild(targetUsername)
@@ -190,7 +190,7 @@ createButton("Teleport", 140, function(button)
         local playerRoot = getRoot(Players.LocalPlayer.Character)
 
         if targetRoot and playerRoot then
-            playerRoot.CFrame = targetRoot.CFrame + Vector3.new(2, 0, 2) -- Offset slightly to prevent overlap
+            playerRoot.CFrame = targetRoot.CFrame + Vector3.new(2, 0, 2) 
             print("Teleported to", targetUsername)
         else
             print("Error: Could not find root parts.")
@@ -200,7 +200,7 @@ createButton("Teleport", 140, function(button)
     end
 end)
 
--- Close Button at the Bottom
+
 createButton("Close", 190, function(button)
     screenGui:Destroy()
 end)
